@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 
 
 namespace Forms;
-
 public static class FormModel
 {
     public static async Task<IResult> Model(string url)
@@ -23,7 +22,6 @@ public static class FormOperations
         {
             return await FormModel.Model($"https://api.tally.so/forms/{formId}");
         });
-
         app.MapGet("/form", async () =>
         {
             return await FormModel.Model($"https://api.tally.so/forms");
