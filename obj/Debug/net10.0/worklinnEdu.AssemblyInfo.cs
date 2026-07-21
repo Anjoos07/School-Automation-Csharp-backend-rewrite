@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("worklinnEdu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8e465f8e08eca3ea52a8b3581b522d06bee16bb6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb024bc7f77557ed5485f2c8db1df88e462c3bdd")]
 [assembly: System.Reflection.AssemblyProductAttribute("worklinnEdu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("worklinnEdu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

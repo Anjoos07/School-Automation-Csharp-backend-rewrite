@@ -30,9 +30,14 @@ public static class FormCreation
     {
         app.MapPost("/form-creation", async () =>
         {
-            return 1;
+            return CreateForm();
         });
     }
+
+    public static async Task<IResult> CreateForm()
+    {
+        return null!;
+    } 
 }
 
 public class Block
@@ -153,5 +158,45 @@ public class Block
             mainBlock.Add(block);
         };
     return mainBlock;
+    }
+}
+
+public class Condition
+{
+    public static Block PageCondition(string groupUUID, bool hideButton)
+    {
+        return new Block
+        {
+            type = "CONDITIONAL_LOGIC",
+            groupType = "CONDITIONAL_LOGIC",
+            payload = {
+                ["logicalOperator"] = "AND",
+                ["conditionals"] = new List<object>{
+                    new Dictionary<string,object>
+                    {
+                        ["uuid"] = Helper.GenUUID(),
+                        ["type"] = "SINGLE",
+                        ["payload"] = new Dictionary<string,object>{
+                           ["field"] = new Dictionary<string,object>{
+                                ["uuid"] = groupUUID,
+                                ["title"] = "Events",
+                                ["type"] = "INPUT_FIELD",
+                                ["questionType"] = "CHECKBOXES",
+                                ["blockGroupUuid"] = groupUUID,
+                            },
+                            ["comparison"] = hideButton ? "IS_NOT_EMPTY" : "IS_EMPTY",
+                            ["value"] = null!,
+                        },
+                    }
+                },
+                ["actions"] = new List<object>{
+                    new Dictionary<string,object>
+                    {
+                        ["uuid"] = Helper.GenUUID(),
+                        ["type"] = hideButton ? "JUMP_TO_PAGE" : "HIDE_BUTTON_TO_DISABLE_COMPLETION",
+                    }
+                }
+            }
+        };
     }
 }
