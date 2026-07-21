@@ -18,6 +18,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapFormCreationEndpoints();
+app.MapFormOperationsEndpoints();
 
 
 app.Run();
