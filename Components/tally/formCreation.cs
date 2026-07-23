@@ -15,14 +15,8 @@ public static class FormModel
         return Results.Text(json, "application/json");
     }
      // For Post Operations
-    public class Payload
-    {
-        public object Blocks { get; set; } = default!;
-        public string Status { get; set; } = "";
-        public object Settings { get; set; } = default!;
-    }
-
-    public static async Task<IResult> PostModel(string url, Payload payload)
+     
+    public static async Task<IResult> PostModel(string url, PayloadModel payload)
     {
         var baseUrl = url;
         var client = new HttpClient();
@@ -35,13 +29,6 @@ public static class FormModel
 
 public static class FormCreation
 {
-    public static void MapFormCreationEndpoints(this WebApplication app)
-    {
-        app.MapPost("/form-creation", async () =>
-        {
-            return CreateForm();
-        });
-    }
 
     public static async Task<IResult> CreateForm()
     {

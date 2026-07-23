@@ -25,5 +25,9 @@ public static class FormOperations
         {
             return await FormModel.GetModel($"https://api.tally.so/forms/{formId}/submissions/{submissionId}");
         });
+        app.MapPost("/form-creation", async () =>
+        {
+            return FormCreation.CreateForm();
+        });
     }
 }
