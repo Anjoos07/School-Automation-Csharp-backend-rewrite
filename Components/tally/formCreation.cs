@@ -159,6 +159,77 @@ public class Block
 
 public class Condition
 {
+
+    // Creates individual Conditionals.
+    private static Dictionary<string, object> CreateConditionals(
+    string groupUuid,
+    string title,
+    string fieldType,
+    string questionType,
+    string comparison,
+    object value)
+    {
+        return new Dictionary<string, object>
+        {
+            ["uuid"] = Helper.GenUUID(),
+            ["type"] = "SINGLE",
+            ["payload"] = new Dictionary<string, object>
+            {
+                ["field"] = new Dictionary<string, object>
+                {
+                    ["uuid"] = groupUuid,
+                    ["title"] = title,
+                    ["type"] = fieldType,
+                    ["questionType"] = questionType,
+                    ["blockGroupUuid"] = groupUuid
+                },
+                ["comparison"] = comparison,
+                ["value"] = value
+            }
+        };
+    }
+
+    // Creates the Actions for the Conditions.
+    static class Actions
+    {
+
+        // Creates JumpToPage Action.
+        public static Dictionary<string, object> JumpToPage(string pageUuid)
+        {
+            return new Dictionary<string, object>
+            {
+                ["uuid"] = Helper.GenUUID(),
+                ["type"] = "JUMP_TO_PAGE",
+                ["payload"] = new Dictionary<string, object>
+                {
+                    ["jumpToPage"] = pageUuid
+                }
+            };
+        }
+    }
+
+    // Main Condition Creation Function
+    public static Dictionary<string, object> ConditionalLogic(
+    List<Dictionary<string, object>> conditions,
+    List<Dictionary<string, object>> actions,
+    string logicalOperator = "AND")
+    {
+        return new Dictionary<string, object>
+        {
+            ["uuid"] = Helper.GenUUID(),
+            ["type"] = "CONDITIONAL_LOGIC",
+            ["groupUuid"] = Helper.GenUUID(),
+            ["groupType"] = "CONDITIONAL_LOGIC",
+            ["payload"] = new Dictionary<string, object>
+            {
+                ["logicalOperator"] = logicalOperator,
+                ["conditionals"] = conditions,
+                ["actions"] = actions
+            }
+        };
+    }
+
+
     public static Block PageCondition(string groupUUID, bool hideButton)
     {
         return new Block
