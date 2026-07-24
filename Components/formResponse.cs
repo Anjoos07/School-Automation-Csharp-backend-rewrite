@@ -2,6 +2,7 @@ using System.Buffers.Text;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Nodes;
 using Utilities;
+using Requests;
 
 namespace Forms;
 
@@ -27,7 +28,7 @@ public static class FormResponse{
                         ["Authorization"] = $"Bearer {api}" 
                 };
 
-                Response response = await Requests.GetAsync(baseUrl, header);
+                Response response = await Requests.Requests.GetAsync(baseUrl, header);
                 // need to check for http error codes here
 
                 return response;
