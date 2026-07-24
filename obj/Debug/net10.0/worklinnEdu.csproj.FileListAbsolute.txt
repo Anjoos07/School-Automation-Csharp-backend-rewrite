@@ -246,3 +246,7 @@
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/obj/Debug/net10.0/worklinnEdu.pdb
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/obj/Debug/net10.0/worklinnEdu.genruntimeconfig.cache
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/obj/Debug/net10.0/ref/worklinnEdu.dll
+/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/DotNetEnv.dll
+/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Superpower.dll
+/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/DotNetEnv.dll
+/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Superpower.dll
