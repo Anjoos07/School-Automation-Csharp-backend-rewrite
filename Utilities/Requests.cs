@@ -7,7 +7,7 @@ namespace Request;
 public static class Requests{
     
     // Get Operation
-    public static async Task<Response> GetAsync(string url, Dictionary<string, string>? header = null, Dictionary<string, string>? parameters = null, int timeoutSeconds = 0)
+    public static async Task<Response> GetAsync(string url, Dictionary<string, string>? header = null, Dictionary<string, string>? parameters = null, int timeout = 0)
     {
         HttpClient client = new HttpClient();
 
