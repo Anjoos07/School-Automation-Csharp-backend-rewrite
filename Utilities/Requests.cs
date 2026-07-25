@@ -19,9 +19,9 @@ public static class Requests{
             url += "?" + query;
         }
 
-        if (timeoutSeconds is not 0)
+        if (timeout is not 0)
         {
-            client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+            client.Timeout = TimeSpan.FromSeconds(timeout);
         }
 
         if (header is not null)

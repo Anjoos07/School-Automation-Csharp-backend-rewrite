@@ -1,26 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj": {}
+    "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj": {}
   },
   "projects": {
-    "/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj": {
+    "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
+        "projectUniqueName": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
         "projectName": "worklinnEdu",
-        "projectPath": "/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
-        "packagesPath": "/home/shadow/.nuget/packages/",
-        "outputPath": "/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/obj/",
+        "projectPath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
+        "packagesPath": "/home/anjan/.nuget/packages/",
+        "outputPath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/shadow/.nuget/NuGet/NuGet.Config"
+          "/home/anjan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib64/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -91,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/10.0.109/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.110/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

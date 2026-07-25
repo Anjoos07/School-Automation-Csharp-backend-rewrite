@@ -4,6 +4,9 @@ using System.Text.Json.Nodes;
 using Utilities;
 using Request;
 using Microsoft.OpenApi;
+using System.ComponentModel;
+using System.Collections.Specialized;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Forms;
 
@@ -72,13 +75,71 @@ public static class FormResponse{
 
                 if (allSubmissions.Count == 0)
                 {
-                        // return 
+                        return new Response
+                        {
+                                StatusCode = 400,
+                                IsSuccess = false,
+                                Text = "No Submissions Found"
+                        };
                 }
 
-                // return
-                
+                JsonArray respondents =  ProcessResponse(allSubmissions,allQuestions);
 
+                return new Response
+                {
+                        StatusCode = 200,
+                        IsSuccess = true,
+                        Json = respondents
+                };
+        }
+
+        public static JsonArray ProcessResponse(List<JsonObject> allSubmissions, List<JsonObject> allQuestions)
+        {
+
+                JsonArray respondents = new JsonArray();
+                foreach (JsonNode? respondentDataNode in allSubmissions)
+                {
+                        JsonObject respondentData = respondentDataNode!.AsObject();
+                        if (!respondentData["isCompleted"]!.GetValue<bool>())
+                        continue;
+
+                        JsonObject respondent = new JsonObject
+                        {
+                        ["submissionID"] = respondentData["id"]?.DeepClone(),
+                        ["respondentID"] = respondentData["respondentId"]?.DeepClone(),
+                        ["submittedAt"] = respondentData["submittedAt"]?.DeepClone()
+                        };
+
+                        JsonArray responses = new JsonArray();
+
+                        foreach (JsonNode? questionNode in respondentData["responses"]!.AsArray())
+                        {
+                        JsonObject question = questionNode!.AsObject();
+                        JsonObject response = new JsonObject();
+
+                        foreach (JsonNode? questionDataNode in allQuestions)
+                        {
+                                JsonObject questionData = questionDataNode!.AsObject();
+
+                                if (questionData["id"]!.GetValue<string>() ==
+                                question["questionId"]!.GetValue<string>())
+                                {
+                                response["title"] = questionData["title"]?.DeepClone();
+                                break;
+                                }
+                        }
+
+                        response["answer"] = question["answer"]?.DeepClone();
+                        responses.Add(response);
+                        }
+
+                        respondent["responses"] = responses;
+                        respondents.Add(respondent);
+                }
+
+                return respondents;
         }
         
-
 }
+        
+
