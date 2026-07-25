@@ -31,9 +31,9 @@ public static class FormResponse{
                 Response response = await Requests.GetAsync(baseUrl, header);
                 // need to check for http error codes here
                 int totalResresponse = response.Json!["totalNumberOfSubmissionsPerFilter"]!["all"]!.GetValue<int>();
-                int totalPages = Math.Ceiling(totalResresponse / limit);
+                int totalPages = (int)Math.Ceiling((double)totalResresponse / limit);
 
-                //List<> all_questions = response.Json!["questions"];
+                List<> all_questions = response.Json!["questions"];
                 
 
                 return response;
