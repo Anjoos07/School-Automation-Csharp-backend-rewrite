@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Models;
+using DbModels;
 
 namespace Data;
 
@@ -10,5 +10,7 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Note> Notes => Set<Note>();
+    public DbSet<Form> Forms => Set<Form>();
+
+    public DbSet<Kdrrod> Kdrrod => Set<Kdrrod>();
 }
