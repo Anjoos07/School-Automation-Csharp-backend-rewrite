@@ -20,30 +20,36 @@ public class Block
     public string uuid {get; set;} =  Helper.GenUUID();
     public string groupUuid {get; set;} = Helper.GenUUID();
 
-    public static Block FormTitle(string title)
+    public static List<Block> FormTitle(string title)
     {
-        return new Block
+        return new List<Block>
         {
-            type = "FORM_TITLE",
-            groupType = "TEXT",
-            payload = new Dictionary<string, object>
+            new Block
             {
-                ["title"] = title,
-                ["html"] = title 
-            }
-        };
+                type = "FORM_TITLE",
+                groupType = "TEXT",
+                payload = new Dictionary<string, object>
+                {
+                    ["title"] = title,
+                    ["html"] = title 
+                }
+            };
+        }
     }
-    public static Block Title(string text)
+    public static List<Block> Title(string text)
     {
-        return new Block
+        return new List<Block>
         {
-          type = "TITLE",
-          groupType = "QUESTION",
-          payload = new Dictionary<string, object>
+            new Block
             {
-              ["html"] = text
-            }  
-        };
+            type = "TITLE",
+            groupType = "QUESTION",
+            payload = new Dictionary<string, object>
+                {
+                ["html"] = text
+                }  
+            };
+        }
     }
     public static Block InputText(string placeholder)
     {
@@ -241,5 +247,25 @@ public class Condition
                 }
             }
         };
+    }
+}
+
+// Main Function
+public class GenBlock
+{
+    public static List<object> genBlocks(List<string> events)
+    {
+        var mainBlock = new List<object>();
+        var operations = new Dictionary<string, Func<string, List<Block>>>
+    {
+        { "form_title", Block.FormTitle },
+        { "title", Block.Title },
+        { "input_text", Block.InputText },
+        { "checkbox", key => Block.Checkbox(key,events) },
+        { "dropdown", Block.Dropdown },
+        { "page_condition", Block.PageBreak }
+    };
+
+        return null!;
     }
 }
