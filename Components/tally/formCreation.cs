@@ -33,8 +33,8 @@ public class Block
                     ["title"] = title,
                     ["html"] = title 
                 }
-            };
-        }
+            }
+        };
     }
     public static List<Block> Title(string text)
     {
@@ -48,30 +48,36 @@ public class Block
                 {
                 ["html"] = text
                 }  
-            };
-        }
-    }
-    public static Block InputText(string placeholder)
-    {
-        return new Block
-        {
-            type = "INPUT_TEXT",
-            groupType = "INPUT_TEXT",
-            payload = new Dictionary<string, object>
-            {
-                ["placeholder"] = placeholder
             }
         };
     }
-    public static Block InputNumber(string placeholder)
+    public static List<Block> InputText(string placeholder)
     {
-        return new Block
+        return new List<Block>
         {
-            type = "INPUT_NUMBER",
-            groupType = "INPUT_NUMBER",
-            payload = new Dictionary<string, object>
+            new Block
             {
-                ["placeholder"] = placeholder
+                type = "INPUT_TEXT",
+                groupType = "INPUT_TEXT",
+                payload = new Dictionary<string, object>
+                {
+                    ["placeholder"] = placeholder
+                }
+            }
+        };
+    }
+    public static List<Block> InputNumber(string placeholder)
+    {
+        return new List<Block>
+        {
+            new Block
+            {
+                type = "INPUT_NUMBER",
+                groupType = "INPUT_NUMBER",
+                payload = new Dictionary<string, object>
+                {
+                    ["placeholder"] = placeholder
+                }
             }
         };
     }
@@ -97,23 +103,6 @@ public class Block
         };
         return mainBlock;
     }
-    public static Block PageBreak(string pageUUID)
-    {
-        return new Block
-        {
-            uuid=pageUUID,
-            type="PAGE_BREAK",
-            groupUuid=pageUUID,
-            groupType="PAGE_BREAK",
-            payload= new Dictionary<string, object>
-            {
-                ["buttom"] = new Dictionary<string, object>
-                {
-                    ["label"] = "Submit"
-                }
-            }
-        };
-    }
     public static List<Block> Dropdown(string groupUUID, List<string> options)
     {
         List<Block> mainBlock = new();
@@ -136,6 +125,23 @@ public class Block
             mainBlock.Add(block);
         };
     return mainBlock;
+    }
+    public static Block PageBreak(string pageUUID)
+    {
+        return  new Block
+        {
+            uuid=pageUUID,
+            type="PAGE_BREAK",
+            groupUuid=pageUUID,
+            groupType="PAGE_BREAK",
+            payload= new Dictionary<string, object>
+            {
+                ["buttom"] = new Dictionary<string, object>
+                {
+                    ["label"] = "Submit"
+                }
+            }
+        };
     }
 }
 
@@ -250,22 +256,81 @@ public class Condition
     }
 }
 
+public class Operations
+{
+   public static Dictionary<string,Block> GenPageBreak(List<string> pages)
+    {
+        Dictionary<string,Block> pageBlock = new();
+        foreach(string page in pages)
+        {
+            pageBlock[page] = Block.PageBreak(Helper.GenUUID());
+        }
+        return null!;
+    }
+}
+
 // Main Function
 public class GenBlock
 {
-    public static List<object> genBlocks(List<string> events)
+    public static List<object> GenBlocks(Dictionary<string, (string Type, List<string>? Options)> events)
     {
         var mainBlock = new List<object>();
-        var operations = new Dictionary<string, Func<string, List<Block>>>
-    {
-        { "form_title", Block.FormTitle },
-        { "title", Block.Title },
-        { "input_text", Block.InputText },
-        { "checkbox", key => Block.Checkbox(key,events) },
-        { "dropdown", Block.Dropdown },
-        { "page_condition", Block.PageBreak }
-    };
+        // Operations Dictionary
+        
+        Dictionary<string, Func<string, List<string>?, List<Block>>> operations = new()
+        {
+            { "form_title", (key, options) => Block.FormTitle(key) },
+            { "form_title", (key, options) => Block.Title(key) },
+            { "input_text", (key, options) => Block.InputText(key) },
+            { "form_title", (key, options) => Block.InputNumber(key) },
+            { "checkbox", (key, options) => Block.Checkbox(key, options!) },
+            { "dropdown", (key, options) => Block.Dropdown(key, options!) }
+        };
+
+        Dictionary<string,Block> pages = Operations.GenPageBreak(events["page_break_gen"].Options!);
+        events.Remove("page_break_gen");
+
+        List<Block> allBlocks = new();
+
+        foreach (var field in events)
+        {
+            string key = field.Key;
+            string type = field.Value.Type;
+            List<string>? options = field.Value.Options;
+
+            allBlocks.AddRange(operations[type](key, options));
+        }
 
         return null!;
     }
+
+    // Form Definition
+        Dictionary<string, (string Type, List<string>? Options)> form = new()
+        {
+            {
+                "PageBreakGen",
+                ("PageBreak", new()
+                {
+                    "page1",
+                    "page2"
+                })
+            },
+            { "Name", ("form_title", null) },
+            { "Class", ("checkbox", new()
+                {
+                    "1",
+                    "2",
+                    "3"
+                })
+            },
+            { "Department", ("dropdown", new()
+                {
+                    "CSE",
+                    "ECE",
+                    "ME"
+                })
+            },
+            { "page2", ("page_break", null) },
+            { "Age", ("input_text", null) }
+        };
 }
