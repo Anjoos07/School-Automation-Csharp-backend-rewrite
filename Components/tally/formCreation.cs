@@ -272,7 +272,7 @@ public class Operations
 // Main Function
 public class GenBlock
 {
-    public static List<object> GenBlocks(Dictionary<string, (string Type, List<string>? Options)> events)
+    public static List<Block> GenBlocks(Dictionary<string, (string Type, List<string>? Options)> events)
     {
         var mainBlock = new List<object>();
         // Operations Dictionary
@@ -301,7 +301,7 @@ public class GenBlock
             allBlocks.AddRange(operations[type](key, options));
         }
 
-        return null!;
+        return allBlocks;
     }
 
     // Form Definition
