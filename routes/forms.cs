@@ -28,9 +28,9 @@ public static class FormOperations
         {
             return Results.Ok(await Requests.GetAsync($"https://api.tally.so/forms/{formId}/submissions/{submissionId}"));
         });
-        app.MapPost("/form-creation", async () =>
+        app.MapPost("/form-creation", async (Dictionary<string, FormField> eventList) =>
         {
-            return await FormCreation.CreateForm();
+            return await FormCreation.CreateForm(eventList);
         });
         app.MapGet("/fetch-response/{formId}", async (string formId) =>
         {

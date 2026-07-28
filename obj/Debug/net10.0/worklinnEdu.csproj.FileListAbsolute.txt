@@ -23,9 +23,7 @@
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Microsoft.OpenApi.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Microsoft.VisualStudio.SolutionPersistence.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Mono.TextTemplating.dll
-/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/MySqlConnector.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Newtonsoft.Json.dll
-/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Pomelo.EntityFrameworkCore.MySql.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Scalar.AspNetCore.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/System.CodeDom.dll
 /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/System.Composition.AttributedModel.dll
@@ -253,3 +251,6 @@
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/EFCore.NamingConventions.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Npgsql.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/EFCore.NamingConventions.dll
+/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Npgsql.dll
+/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll

@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Superpower.Model;
 using Utilities;
 
 namespace Forms;
@@ -6,9 +7,9 @@ namespace Forms;
 public static class FormCreation
 {
 
-    public static async Task<IResult> CreateForm()
+    public static async Task<IResult> CreateForm(Dictionary<string, FormField> eventList)
     {
-        return null!;
+        return Results.Ok(GenBlock.GenBlocks(eventList));
     } 
 }
 
@@ -81,9 +82,10 @@ public class Block
             }
         };
     }
-    public static List<Block> Checkbox(string groupUUID, List<string> events)
+    public static List<Block> Checkbox(string name, List<string> events)
     {
-        List<Block> mainBlock = new();
+        List<Block> mainBlock = [.. Title(name)];
+        string groupUUID = Helper.GenUUID();
 
         for(int index = 0; index < events.Count; index++)
         {   Block block = new Block()
@@ -103,9 +105,10 @@ public class Block
         };
         return mainBlock;
     }
-    public static List<Block> Dropdown(string groupUUID, List<string> options)
+    public static List<Block> Dropdown(string name, List<string> options)
     {
-        List<Block> mainBlock = new();
+        List<Block> mainBlock = [.. Title(name)];
+        string groupUUID = Helper.GenUUID();
 
         for(int index = 0; index < options.Count; index++)
         {   Block block = new Block()
@@ -126,19 +129,22 @@ public class Block
         };
     return mainBlock;
     }
-    public static Block PageBreak(string pageUUID)
+    public static List<Block> PageBreak(string pageUUID)
     {
-        return  new Block
+        return new List<Block>
         {
-            uuid=pageUUID,
-            type="PAGE_BREAK",
-            groupUuid=pageUUID,
-            groupType="PAGE_BREAK",
-            payload= new Dictionary<string, object>
+            new Block
             {
-                ["buttom"] = new Dictionary<string, object>
+                uuid=pageUUID,
+                type="PAGE_BREAK",
+                groupUuid=pageUUID,
+                groupType="PAGE_BREAK",
+                payload= new Dictionary<string, object>
                 {
-                    ["label"] = "Submit"
+                    ["buttom"] = new Dictionary<string, object>
+                    {
+                        ["label"] = "Submit"
+                    }
                 }
             }
         };
@@ -258,37 +264,37 @@ public class Condition
 
 public class Operations
 {
-   public static Dictionary<string,Block> GenPageBreak(List<string> pages)
+   public static Dictionary<string,List<Block>> GenPageBreak(List<string> pages)
     {
-        Dictionary<string,Block> pageBlock = new();
+        Dictionary<string,List<Block>> pageBlock = new();
         foreach(string page in pages)
         {
             pageBlock[page] = Block.PageBreak(Helper.GenUUID());
         }
-        return null!;
+        return pageBlock;
     }
 }
 
 // Main Function
 public class GenBlock
 {
-    public static List<Block> GenBlocks(Dictionary<string, (string Type, List<string>? Options)> events)
+    public static List<Block> GenBlocks(Dictionary<string, FormField> events)
     {
         var mainBlock = new List<object>();
         // Operations Dictionary
         
         Dictionary<string, Func<string, List<string>?, List<Block>>> operations = new()
         {
-            { "form_title", (key, options) => Block.FormTitle(key) },
-            { "form_title", (key, options) => Block.Title(key) },
-            { "input_text", (key, options) => Block.InputText(key) },
-            { "form_title", (key, options) => Block.InputNumber(key) },
-            { "checkbox", (key, options) => Block.Checkbox(key, options!) },
-            { "dropdown", (key, options) => Block.Dropdown(key, options!) }
+            { "FormTitle", (key, options) => Block.FormTitle(key) },
+            { "Title", (key, options) => Block.Title(key) },
+            { "InputText", (key, options) => Block.InputText(key) },
+            { "InputNumber", (key, options) => Block.InputNumber(key) },
+            { "Checkbox", (key, options) => Block.Checkbox(key,options!) },
+            { "Dropdown", (key, options) => Block.Dropdown(key,options!) }
         };
 
-        Dictionary<string,Block> pages = Operations.GenPageBreak(events["page_break_gen"].Options!);
-        events.Remove("page_break_gen");
+        Dictionary<string,List<Block>> pages = Operations.GenPageBreak(events["PageBreakGen"].Options!);
+        events.Remove("PageBreakGen");
 
         List<Block> allBlocks = new();
 
@@ -298,39 +304,40 @@ public class GenBlock
             string type = field.Value.Type;
             List<string>? options = field.Value.Options;
 
-            allBlocks.AddRange(operations[type](key, options));
+            List<Block> block = type == "PageBreak" ? pages[key] : operations[type](key, options);
+            allBlocks.AddRange(block);
         }
 
         return allBlocks;
     }
 
     // Form Definition
-        Dictionary<string, (string Type, List<string>? Options)> form = new()
-        {
-            {
-                "PageBreakGen",
-                ("PageBreak", new()
-                {
-                    "page1",
-                    "page2"
-                })
-            },
-            { "Name", ("form_title", null) },
-            { "Class", ("checkbox", new()
-                {
-                    "1",
-                    "2",
-                    "3"
-                })
-            },
-            { "Department", ("dropdown", new()
-                {
-                    "CSE",
-                    "ECE",
-                    "ME"
-                })
-            },
-            { "page2", ("page_break", null) },
-            { "Age", ("input_text", null) }
-        };
+        // Dictionary<string, (string Type, List<string>? Options)> form = new()
+        // {
+        //     {
+        //         "PageBreakGen",
+        //         ("PageBreak", new()
+        //         {
+        //             "page1",
+        //             "page2"
+        //         })
+        //     },
+        //     { "Name", ("form_title", null) },
+        //     { "Class", ("checkbox", new()
+        //         {
+        //             "1",
+        //             "2",
+        //             "3"
+        //         })
+        //     },
+        //     { "Department", ("dropdown", new()
+        //         {
+        //             "CSE",
+        //             "ECE",
+        //             "ME"
+        //         })
+        //     },
+        //     { "page2", ("page_break", null) },
+        //     { "Age", ("input_text", null) }
+        // };
 }

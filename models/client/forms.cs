@@ -17,3 +17,9 @@ public class Response
         public bool IsSuccess { get; init; }
         public string? Text { get; set; }
     }
+
+public class FormField
+{
+    public string Type { get; set; } = "";
+    public List<string>? Options { get; set; }
+}
