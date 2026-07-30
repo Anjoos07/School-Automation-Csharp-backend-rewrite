@@ -1,15 +1,49 @@
 using System.Net.Http.Headers;
+using Npgsql.Internal.Postgres;
 using Superpower.Model;
 using Utilities;
+using Request;
+using System.Text.Json;
 
 namespace Forms;
 
 public static class FormCreation
 {
 
-    public static async Task<IResult> CreateForm(Dictionary<string, FormField> eventList)
+    public static async Task<Response> CreateForm(Dictionary<string, FormField> eventList)
     {
-        return Results.Ok(GenBlock.GenBlocks(eventList));
+        string api = Helper.GetKey();
+                if (api is null)
+                {
+                        return new Response
+                        {
+                                StatusCode = 0,
+                                IsSuccess = false,
+                                Text = "API key not found"
+                        };
+                }
+                string baseUrl = $"https://api.tally.so/forms";
+
+                Dictionary<string, string> header = new Dictionary<string, string>
+                {
+                        ["Authorization"] = $"Bearer {api}" 
+                };
+
+                PayloadModel payload = new(){
+                    blocks = GenBlock.GenBlocks(eventList),
+                    status = "PUBLISHED"
+                };
+
+                Console.WriteLine(
+                    JsonSerializer.Serialize(payload,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }));
+
+                Response response = await Requests.PostAsync(baseUrl, payload, header);
+
+        return response;
     } 
 }
 
@@ -20,8 +54,11 @@ public class Block
     public Dictionary<string,object> payload {get; set;} = new();
     public string uuid {get; set;} =  Helper.GenUUID();
     public string groupUuid {get; set;} = Helper.GenUUID();
-
-    public static List<Block> FormTitle(string title)
+    public static List<List<string>> SafeHtml(string text)
+    {
+        return [[text]];
+    }
+    public static List<Block> FormTitle(string title,string uuid)
     {
         return new List<Block>
         {
@@ -29,10 +66,11 @@ public class Block
             {
                 type = "FORM_TITLE",
                 groupType = "TEXT",
+                groupUuid = uuid,
                 payload = new Dictionary<string, object>
                 {
-                    ["title"] = title,
-                    ["html"] = title 
+                    ["safeHTMLSchema"] = SafeHtml(title),
+                    ["title"] = title
                 }
             }
         };
@@ -47,51 +85,56 @@ public class Block
             groupType = "QUESTION",
             payload = new Dictionary<string, object>
                 {
-                ["html"] = text
+                ["safeHTMLSchema"] = SafeHtml(text)
                 }  
             }
         };
     }
-    public static List<Block> InputText(string placeholder)
+    public static List<Block> InputText(string placeholder,string uuid)
     {
-        return new List<Block>
-        {
+        List<Block> block =
+        [
+            .. Title(placeholder),
             new Block
             {
                 type = "INPUT_TEXT",
                 groupType = "INPUT_TEXT",
+                groupUuid = uuid,
                 payload = new Dictionary<string, object>
                 {
                     ["placeholder"] = placeholder
                 }
-            }
-        };
+            },
+        ];
+        return block;
     }
-    public static List<Block> InputNumber(string placeholder)
+    public static List<Block> InputNumber(string placeholder,string uuid)
     {
-        return new List<Block>
-        {
+        List<Block> block =
+        [
+            .. Title(placeholder),
             new Block
             {
                 type = "INPUT_NUMBER",
                 groupType = "INPUT_NUMBER",
+                groupUuid = uuid,
                 payload = new Dictionary<string, object>
                 {
                     ["placeholder"] = placeholder
                 }
-            }
-        };
+            },
+        ];
+        return block;
     }
-    public static List<Block> Checkbox(string name, List<string> events)
+    public static List<Block> Checkbox(string name, List<string> events,string uuid)
     {
         List<Block> mainBlock = [.. Title(name)];
-        string groupUUID = Helper.GenUUID();
 
         for(int index = 0; index < events.Count; index++)
         {   Block block = new Block()
             {
                 type="CHECKBOX",
-                groupUuid= groupUUID,
+                groupUuid= uuid,
                 groupType="CHECKBOXES",
                 payload = new Dictionary<string, object>
                 {
@@ -105,16 +148,15 @@ public class Block
         };
         return mainBlock;
     }
-    public static List<Block> Dropdown(string name, List<string> options)
+    public static List<Block> Dropdown(string name, List<string> options,string uuid)
     {
         List<Block> mainBlock = [.. Title(name)];
-        string groupUUID = Helper.GenUUID();
 
         for(int index = 0; index < options.Count; index++)
         {   Block block = new Block()
             {
                 type="DROPDOWN_OPTION",
-                groupUuid= groupUUID,
+                groupUuid= uuid,
                 groupType="DROPDOWN",
                 payload = new Dictionary<string, object>
                 {
@@ -141,7 +183,7 @@ public class Block
                 groupType="PAGE_BREAK",
                 payload= new Dictionary<string, object>
                 {
-                    ["buttom"] = new Dictionary<string, object>
+                    ["button"] = new Dictionary<string, object>
                     {
                         ["label"] = "Submit"
                     }
@@ -158,11 +200,18 @@ public class Condition
     private static Dictionary<string, object> CreateConditionals(
     string groupUuid,
     string title,
-    string fieldType,
     string questionType,
     string comparison,
-    object value)
+    string value,
+    string fieldType = "INPUT_FIELD")
     {
+        object finalValue;
+
+        if (int.TryParse(value, out int number))
+            finalValue = number;
+        else
+            finalValue = value;
+
         return new Dictionary<string, object>
         {
             ["uuid"] = Helper.GenUUID(),
@@ -178,7 +227,7 @@ public class Condition
                     ["blockGroupUuid"] = groupUuid
                 },
                 ["comparison"] = comparison,
-                ["value"] = value
+                ["value"] = finalValue
             }
         };
     }
@@ -203,25 +252,65 @@ public class Condition
     }
 
     // Main Condition Creation Function
-    public static Dictionary<string, object> ConditionalLogic(
+    public static List<Block> ConditionalLogic(
     List<Dictionary<string, object>> conditions,
     List<Dictionary<string, object>> actions,
     string logicalOperator = "AND")
     {
-        return new Dictionary<string, object>
-        {
-            ["uuid"] = Helper.GenUUID(),
-            ["type"] = "CONDITIONAL_LOGIC",
-            ["groupUuid"] = Helper.GenUUID(),
-            ["groupType"] = "CONDITIONAL_LOGIC",
-            ["payload"] = new Dictionary<string, object>
-            {
-                ["logicalOperator"] = logicalOperator,
-                ["conditionals"] = conditions,
-                ["actions"] = actions
+        return new List<Block>{
+            new Block{
+                uuid = Helper.GenUUID(),
+                type = "CONDITIONAL_LOGIC",
+                groupUuid = Helper.GenUUID(),
+                groupType = "CONDITIONAL_LOGIC",
+                payload = new Dictionary<string, object>
+                {
+                    ["logicalOperator"] = logicalOperator,
+                    ["conditionals"] = conditions,
+                    ["actions"] = actions
+                }
             }
         };
     }
+
+
+    public static List<Block> ConditionOperation(List<List<Dictionary<string,List<string>>>> conditionList, List<Block> blocks, Dictionary<string,FormField> events)
+    {
+        List<Block> conditionBlock = [];
+        Dictionary<string,Func<string,Dictionary<string, object>>> operations = new()
+        {
+            {"JumpToPage", Actions.JumpToPage}
+        };
+
+        foreach (List<Dictionary<string,List<string>>> group in conditionList)
+        {
+            List<Dictionary<string, object>> condition = [];
+            List<Dictionary<string, object>> action = [];
+            foreach (Dictionary<string,List<string>> dict in group)
+            {
+                foreach (KeyValuePair<string,List<string>> kvp in dict)
+                {
+                    Console.WriteLine($"  {kvp.Key}");
+                    if(kvp.Key != "Action"){
+                        Block? block = blocks.FirstOrDefault(b => b.groupUuid == kvp.Value[0]);
+                        string? key = events
+                        .FirstOrDefault(x => x.Value.groupUUID?.ToString() == kvp.Value[0])
+                        .Key;
+                        Console.WriteLine($"    {block.type} {key}");
+                        condition.AddRange(CreateConditionals(kvp.Value[0], key, block.type, kvp.Value[1], kvp.Value[2]));
+                    }
+                    else
+                    {
+                        action.AddRange(operations[kvp.Value[0]](kvp.Value[1]));
+                    }
+                }
+            }
+            conditionBlock.AddRange(ConditionalLogic(condition ,action));
+        }
+
+        return conditionBlock;
+    }
+
 
 
     public static Block PageCondition(string groupUUID, bool hideButton)
@@ -267,9 +356,9 @@ public class Operations
    public static Dictionary<string,List<Block>> GenPageBreak(List<string> pages)
     {
         Dictionary<string,List<Block>> pageBlock = new();
-        foreach(string page in pages)
+        foreach(string uuid in pages)
         {
-            pageBlock[page] = Block.PageBreak(Helper.GenUUID());
+            pageBlock[uuid] = Block.PageBreak(uuid);
         }
         return pageBlock;
     }
@@ -283,28 +372,34 @@ public class GenBlock
         var mainBlock = new List<object>();
         // Operations Dictionary
         
-        Dictionary<string, Func<string, List<string>?, List<Block>>> operations = new()
+        Dictionary<string,
+        Func<string,List<string>?,string,List<List<Dictionary<string,List<string>>>>?,List<Block>,Dictionary<string,FormField>,
+        List<Block>>>
+        operations = new()
         {
-            { "FormTitle", (key, options) => Block.FormTitle(key) },
-            { "Title", (key, options) => Block.Title(key) },
-            { "InputText", (key, options) => Block.InputText(key) },
-            { "InputNumber", (key, options) => Block.InputNumber(key) },
-            { "Checkbox", (key, options) => Block.Checkbox(key,options!) },
-            { "Dropdown", (key, options) => Block.Dropdown(key,options!) }
+            { "FormTitle", (key, options, uuid,condition,block,events) => Block.FormTitle(key,uuid) },
+            { "Title", (key, options,uuid,condition,block,events) => Block.Title(key) },
+            { "InputText", (key, options,uuid,condition,block,events) => Block.InputText(key,uuid) },
+            { "InputNumber", (key, options,uuid,condition,block,events) => Block.InputNumber(key,uuid) },
+            { "Checkbox", (key, options,uuid,condition,block,events) => Block.Checkbox(key,options!,uuid) },
+            { "Dropdown", (key, options,uuid,condition,block,events) => Block.Dropdown(key,options!,uuid) },
+            { "Condition", (key,options,uuid,condition,block,events) => Condition.ConditionOperation(condition!,block,events)}
         };
 
         Dictionary<string,List<Block>> pages = Operations.GenPageBreak(events["PageBreakGen"].Options!);
         events.Remove("PageBreakGen");
 
-        List<Block> allBlocks = new();
+        List<Block> allBlocks = [];
 
         foreach (var field in events)
         {
             string key = field.Key;
             string type = field.Value.Type;
             List<string>? options = field.Value.Options;
+            string uuid = field.Value.groupUUID;
+            List<List<Dictionary<string,List<string>>>>? conditions = field.Value.conditions;
 
-            List<Block> block = type == "PageBreak" ? pages[key] : operations[type](key, options);
+            List<Block> block = type == "PageBreak" ? pages[key] : operations[type](key, options, uuid, conditions,allBlocks,events);
             allBlocks.AddRange(block);
         }
 

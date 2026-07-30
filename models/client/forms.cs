@@ -1,13 +1,13 @@
 using System.Net;
 using System.Text.Json.Nodes;
+using Utilities;
 
 namespace Forms;
 
 public class PayloadModel
     {
-        public object Blocks { get; set; } = default!;
-        public string Status { get; set; } = "";
-        public object Settings { get; set; } = default!;
+        public object blocks { get; set; } = default!;
+        public string status { get; set; } = "";
     }
 
 public class Response
@@ -22,4 +22,6 @@ public class FormField
 {
     public string Type { get; set; } = "";
     public List<string>? Options { get; set; }
+    public string groupUUID {get; set;} = Helper.GenUUID();
+    public List<List<Dictionary<string,List<string>>>>? conditions {get; set;}
 }

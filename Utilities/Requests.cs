@@ -44,7 +44,7 @@ public static class Requests{
     }
 
     //Post Operation
-    static async Task<Response> PostAsync<T>(string url,T payload,Dictionary<string, string>? headers = null)
+    public static async Task<Response> PostAsync<T>(string url,T payload, Dictionary<string, string>? headers = null)
     {
         using HttpClient client = new();
 
