@@ -8,6 +8,7 @@ public class PayloadModel
     {
         public object blocks { get; set; } = default!;
         public string status { get; set; } = "";
+        public Dictionary<string, object> settings { get; set; } = [];
     }
 
 public class Response

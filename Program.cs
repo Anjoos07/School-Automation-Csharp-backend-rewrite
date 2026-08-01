@@ -21,7 +21,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-app.MapFormOperationsEndpoints();
+app.MapFormOperationsEndpoints(); // Tally Forms
 
 
 app.Run();

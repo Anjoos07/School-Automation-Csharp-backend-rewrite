@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 // need to add settings
 // need to add more actions in condition
 
-
-
 namespace Forms;
 
 public static class FormCreation
@@ -32,10 +30,22 @@ public static class FormCreation
                 {
                         ["Authorization"] = $"Bearer {api}" 
                 };
+                Dictionary<string, object> settings = new()
+                {
+                    ["isClosed"] = false,
+                    ["closeDate"] = eventList["closeDate"],
+                    ["closeTime"] = eventList["closeTime"],
+                    ["closeTimezone"] = "Asia/Kolkata",
+                    ["closeMessageTitle"] = "Form Closed",
+                    ["closeMessageDescription"] = "The deadline has passed."
+                };
+                eventList.Remove("closeDate");
+                eventList.Remove("closeTime");
 
                 PayloadModel payload = new(){
                     blocks = GenBlock.GenBlocks(eventList),
-                    status = "PUBLISHED"
+                    status = "PUBLISHED",
+                    settings = settings
                 };
 
                 Console.WriteLine(
@@ -310,7 +320,7 @@ public class Condition
                     else
                     {
                         string ActionToDo = kvp.Value[0];
-                        string? value = kvp.Value.Count > 1 ? kvp.Value[1] : null;
+                        string value = kvp.Value.Count > 1 ? kvp.Value[1] : null!;
                         action.AddRange(operations[ActionToDo](value));
                     }
                 }
