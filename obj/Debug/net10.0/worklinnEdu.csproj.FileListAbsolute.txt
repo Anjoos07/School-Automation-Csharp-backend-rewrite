@@ -145,9 +145,7 @@
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Microsoft.OpenApi.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Microsoft.VisualStudio.SolutionPersistence.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Mono.TextTemplating.dll
-/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/MySqlConnector.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Newtonsoft.Json.dll
-/mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Pomelo.EntityFrameworkCore.MySql.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/Scalar.AspNetCore.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/System.CodeDom.dll
 /mnt/Media/coding/projects/worklin/School-Automation-Csharp-backend-rewrite/bin/Debug/net10.0/System.Composition.AttributedModel.dll
