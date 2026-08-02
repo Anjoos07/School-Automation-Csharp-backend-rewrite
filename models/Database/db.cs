@@ -12,6 +12,12 @@ public class Form
 
     [Column("form_name")]
     public string FormName {get; set; } = null!;
+    [Column("form_closed")]
+    public bool FormClosed {get; set;}
+    public ICollection<Field> Fields { get; set; }
+    = new List<Field>();
+    public ICollection<Response> Responses { get; set; }
+    = new List<Response>();
 }
 
 [Table("field", Schema = "core")]
@@ -20,24 +26,48 @@ public class Field
     [Key]
     [Column("field_id")]
     public string FieldId { get; set; } = null!;
+    [ForeignKey(nameof(Form))]
     [Column("form_id")]
     public string FormId { get; set; } = null!;
+    public Form Form { get; set; } = null!;
     [Column("field_name")]
     public string FieldName { get; set; } = null!;
     [Column("field_type")]
     public string FieldType { get; set; } = null!;
+    [Column("field_required")]
+    public bool FieldRequired { get; set; }
 }
 
-[Table("response", Schema = "core")]
+[Table("response", Schema = "responses")]
 public class Response
 {
     [Key]
+    [Column("submission_id")]
+    public string SubmissionId { get; set; } = null!;
+
+    [ForeignKey(nameof(Form))]public enum FieldType
+{
+    Text,
+    Number,
+    Email,
+    Date,
+    Checkbox,
+    Radio,
+    Dropdown,
+    File,
+    TextArea
+}
     [Column("form_id")]
     public string FormId { get; set; } = null!;
-    [Column("submission_id")]
-    public string SubId { get; set; } = null!;
+
+    [Column("submitted_at")]
+    public DateTime SubmittedAt { get; set; }
+
+    [Column("respondent_id")]
+    public string? RespondentId { get; set; }
+
     [Column("response")]
-    public JsonElement response { get; set; };
+    public JsonElement ResponseData { get; set; }
 }
 
 
