@@ -1,4 +1,4 @@
-namespace DbModels;
+namespace DbModelForms;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
@@ -34,8 +34,6 @@ public class Field
     public string FieldName { get; set; } = null!;
     [Column("field_type")]
     public string FieldType { get; set; } = null!;
-    [Column("field_required")]
-    public bool FieldRequired { get; set; }
 }
 
 [Table("response", Schema = "responses")]
@@ -46,7 +44,7 @@ public class Response
     public string SubmissionId { get; set; } = null!;
     [Column("form_id")]
     public string FormId { get; set; } = null!;
-
+    public Form Form { get; set; } = null!;
     [Column("submitted_at")]
     public DateTime SubmittedAt { get; set; }
 
@@ -56,6 +54,5 @@ public class Response
     [Column("response")]
     public JsonElement ResponseData { get; set; }
 }
-
 
 
