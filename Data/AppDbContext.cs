@@ -11,6 +11,4 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Form> Forms => Set<Form>();
-
-    public DbSet<Kdrrod> Kdrrod => Set<Kdrrod>();
 }
