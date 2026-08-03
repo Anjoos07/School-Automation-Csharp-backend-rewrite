@@ -44,19 +44,6 @@ public class Response
     [Key]
     [Column("submission_id")]
     public string SubmissionId { get; set; } = null!;
-
-    [ForeignKey(nameof(Form))]public enum FieldType
-{
-    Text,
-    Number,
-    Email,
-    Date,
-    Checkbox,
-    Radio,
-    Dropdown,
-    File,
-    TextArea
-}
     [Column("form_id")]
     public string FormId { get; set; } = null!;
 
