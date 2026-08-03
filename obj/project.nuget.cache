@@ -39,6 +39,15 @@
   ],
   "logs": [
     {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problem reading the cache file /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/obj/project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
+      "targetGraphs": []
+    },
+    {
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
