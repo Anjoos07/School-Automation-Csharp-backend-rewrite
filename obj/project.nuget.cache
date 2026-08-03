@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "chmuc69PWdk=",
+  "dgSpecHash": "tV1TWSsUWlM=",
   "success": true,
   "projectFilePath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
   "expectedPackageFiles": [
@@ -20,6 +20,7 @@
     "/home/anjan/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.10/microsoft.entityframeworkcore.analyzers.10.0.10.nupkg.sha512",
     "/home/anjan/.nuget/packages/microsoft.entityframeworkcore.design/10.0.10/microsoft.entityframeworkcore.design.10.0.10.nupkg.sha512",
     "/home/anjan/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.10/microsoft.entityframeworkcore.relational.10.0.10.nupkg.sha512",
+    "/home/anjan/.nuget/packages/microsoft.entityframeworkcore.tools/10.0.10/microsoft.entityframeworkcore.tools.10.0.10.nupkg.sha512",
     "/home/anjan/.nuget/packages/microsoft.extensions.dependencymodel/10.0.10/microsoft.extensions.dependencymodel.10.0.10.nupkg.sha512",
     "/home/anjan/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
     "/home/anjan/.nuget/packages/microsoft.visualstudio.solutionpersistence/1.0.52/microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
@@ -38,15 +39,6 @@
     "/home/anjan/.nuget/packages/system.composition.typedparts/9.0.0/system.composition.typedparts.9.0.0.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file /home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/obj/project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
-      "warningLevel": 1,
-      "filePath": "/home/anjan/worklinn/projects/youthFest/School-Automation-Csharp-backend-rewrite/worklinnEdu.csproj",
-      "targetGraphs": []
-    },
     {
       "code": "NU1903",
       "level": "Warning",

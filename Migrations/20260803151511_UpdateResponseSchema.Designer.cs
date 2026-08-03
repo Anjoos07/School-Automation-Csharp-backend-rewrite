@@ -4,6 +4,7 @@ using System.Text.Json;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace worklinnEdu.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260803151511_UpdateResponseSchema")]
+    partial class UpdateResponseSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace worklinnEdu.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DbModelForms.Field", b =>
+            modelBuilder.Entity("DbModels.Field", b =>
                 {
                     b.Property<string>("FieldId")
                         .HasColumnType("text")
@@ -33,6 +36,10 @@ namespace worklinnEdu.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("field_name");
+
+                    b.Property<bool>("FieldRequired")
+                        .HasColumnType("boolean")
+                        .HasColumnName("field_required");
 
                     b.Property<string>("FieldType")
                         .IsRequired()
@@ -51,7 +58,7 @@ namespace worklinnEdu.Migrations
                     b.ToTable("field", "core");
                 });
 
-            modelBuilder.Entity("DbModelForms.Form", b =>
+            modelBuilder.Entity("DbModels.Form", b =>
                 {
                     b.Property<string>("FormId")
                         .HasColumnType("text")
@@ -71,7 +78,7 @@ namespace worklinnEdu.Migrations
                     b.ToTable("form", "core");
                 });
 
-            modelBuilder.Entity("DbModelForms.Response", b =>
+            modelBuilder.Entity("DbModels.Response", b =>
                 {
                     b.Property<string>("SubmissionId")
                         .HasColumnType("text")
@@ -101,9 +108,9 @@ namespace worklinnEdu.Migrations
                     b.ToTable("response", "responses");
                 });
 
-            modelBuilder.Entity("DbModelForms.Field", b =>
+            modelBuilder.Entity("DbModels.Field", b =>
                 {
-                    b.HasOne("DbModelForms.Form", "Form")
+                    b.HasOne("DbModels.Form", "Form")
                         .WithMany("Fields")
                         .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -112,9 +119,9 @@ namespace worklinnEdu.Migrations
                     b.Navigation("Form");
                 });
 
-            modelBuilder.Entity("DbModelForms.Response", b =>
+            modelBuilder.Entity("DbModels.Response", b =>
                 {
-                    b.HasOne("DbModelForms.Form", "Form")
+                    b.HasOne("DbModels.Form", "Form")
                         .WithMany("Responses")
                         .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -123,7 +130,7 @@ namespace worklinnEdu.Migrations
                     b.Navigation("Form");
                 });
 
-            modelBuilder.Entity("DbModelForms.Form", b =>
+            modelBuilder.Entity("DbModels.Form", b =>
                 {
                     b.Navigation("Fields");
 
