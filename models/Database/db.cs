@@ -46,7 +46,7 @@ public class Response
     public string FormId { get; set; } = null!;
     public Form Form { get; set; } = null!;
     [Column("submitted_at")]
-    public DateTime SubmittedAt { get; set; }
+    public DateTimeOffset SubmittedAt { get; set; }
 
     [Column("respondent_id")]
     public string? RespondentId { get; set; }

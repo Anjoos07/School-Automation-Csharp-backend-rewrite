@@ -34,8 +34,8 @@ public static class FormOperations
         });
         app.MapGet("/fetch-response/{formId}", async (string formId,AppDbContext db) =>
         {
-            await Database.InsertResponse(formId,db);
-            return await FormResponse.FetchResponse(formId);            
+            await Database.InsertResponse(formId, db);
+            return await Database.GetResponseDb(formId, db);            
         });
     }
     

@@ -6,6 +6,7 @@ using Forms;
 using Request;
 using Utilities;
 using Microsoft.VisualBasic;
+using Superpower.Model;
 
 namespace Data;
 
@@ -84,16 +85,23 @@ public class Database
                 SubmissionId = respondent!["submissionID"]!.ToString(),
                 RespondentId = respondent!["respondentID"]!.ToString(),
                 ResponseData = JsonSerializer.Deserialize<JsonElement>(respondent!["responses"]!.ToJsonString()),
-                SubmittedAt = DateTime.Parse(respondent!["submittedAt"]!.ToString()),
+                SubmittedAt = respondent!["submittedAt"]!.GetValue<DateTimeOffset>(),
                 FormId = formId
                 
             };
             db.Responses.Add(response_data);
             await db.SaveChangesAsync();
         }
-
-
         return 0;
+    }
+
+    public static async Task<IResult> GetResponseDb(string formId, AppDbContext db)
+    {
+        var response = await db.Responses
+        .Where(x => x.FormId == formId)
+        .ToListAsync();
+
+        return Results.Ok(response);
     }
 }
 
