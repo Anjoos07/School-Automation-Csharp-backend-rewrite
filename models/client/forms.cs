@@ -11,7 +11,7 @@ public class PayloadModel
         public Dictionary<string, object> settings { get; set; } = [];
     }
 
-public class Response
+public class FormResponseModel
     {
         public int StatusCode { get; init; }
         public JsonNode? Json { get; init; }

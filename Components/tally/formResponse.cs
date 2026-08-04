@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 namespace Forms;
 
 public static class FormResponse{
-        public static async Task<Response> FetchResponse(string formId)
+        public static async Task<FormResponseModel> FetchResponse(string formId)
         {
                 string api = Helper.GetKey();
                 if (api is null)
                 {
-                        return new Response
+                        return new FormResponseModel
                         {
                                 StatusCode = 0,
                                 IsSuccess = false,
@@ -37,7 +37,7 @@ public static class FormResponse{
                         ["limit"] = Convert.ToString(limit)
                 };
 
-                Response response = await Requests.GetAsync(baseUrl, header, parameters:Params, timeout:10);
+                FormResponseModel response = await Requests.GetAsync(baseUrl, header, parameters:Params, timeout:10);
                 // need to check for http error codes here
                 int totalResresponse = response.Json!["totalNumberOfSubmissionsPerFilter"]!["all"]!.GetValue<int>();
                 int totalPages = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(totalResresponse / limit)));
@@ -75,7 +75,7 @@ public static class FormResponse{
 
                 if (allSubmissions.Count == 0)
                 {
-                        return new Response
+                        return new FormResponseModel
                         {
                                 StatusCode = 400,
                                 IsSuccess = false,
@@ -85,7 +85,7 @@ public static class FormResponse{
 
                 JsonArray respondents =  ProcessResponse(allSubmissions,allQuestions);
 
-                return new Response
+                return new FormResponseModel
                 {
                         StatusCode = 200,
                         IsSuccess = true,

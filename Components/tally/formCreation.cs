@@ -1,5 +1,6 @@
 using Utilities;
 using Request;
+using Data;
 using System.Text.Json;
 using System.Windows.Markup;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
@@ -12,12 +13,12 @@ namespace Forms;
 public static class FormCreation
 {
 
-    public static async Task<Response> CreateForm(Dictionary<string, FormField> eventList)
+    public static async Task<FormResponseModel> CreateForm(Dictionary<string, FormField> eventList, AppDbContext db)
     {
         string api = Helper.GetKey();
                 if (api is null)
                 {
-                        return new Response
+                        return new FormResponseModel
                         {
                                 StatusCode = 0,
                                 IsSuccess = false,
@@ -30,22 +31,22 @@ public static class FormCreation
                 {
                         ["Authorization"] = $"Bearer {api}" 
                 };
-                Dictionary<string, object> settings = new()
-                {
-                    ["isClosed"] = false,
-                    ["closeDate"] = eventList["closeDate"],
-                    ["closeTime"] = eventList["closeTime"],
-                    ["closeTimezone"] = "Asia/Kolkata",
-                    ["closeMessageTitle"] = "Form Closed",
-                    ["closeMessageDescription"] = "The deadline has passed."
-                };
-                eventList.Remove("closeDate");
-                eventList.Remove("closeTime");
+                // Dictionary<string, object> settings = new()
+                // {
+                //     ["isClosed"] = false,
+                //     //["closeDate"] = eventList["closeDate"],
+                //     //["closeTime"] = eventList["closeTime"],
+                //     ["closeTimezone"] = "Asia/Kolkata",
+                //     ["closeMessageTitle"] = "Form Closed",
+                //     ["closeMessageDescription"] = "The deadline has passed."
+                // };
+                // //eventList.Remove("closeDate");
+                // //eventList.Remove("closeTime");
 
                 PayloadModel payload = new(){
                     blocks = GenBlock.GenBlocks(eventList),
-                    status = "PUBLISHED",
-                    settings = settings
+                    status = "PUBLISHED"
+                    // settings = settings
                 };
 
                 Console.WriteLine(
@@ -55,7 +56,8 @@ public static class FormCreation
                         WriteIndented = true
                     }));
 
-                Response response = await Requests.PostAsync(baseUrl, payload, header);
+                FormResponseModel response = await Requests.PostAsync(baseUrl, payload, header);
+                int a = await Database.InsertForm(response, db);
 
         return response;
     } 

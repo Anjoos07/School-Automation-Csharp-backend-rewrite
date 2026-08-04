@@ -7,7 +7,7 @@ namespace Request;
 public static class Requests{
     
     // Get Operation
-    public static async Task<Response> GetAsync(string url, Dictionary<string, string>? header = null, Dictionary<string, string>? parameters = null, int timeout = 0)
+    public static async Task<FormResponseModel> GetAsync(string url, Dictionary<string, string>? header = null, Dictionary<string, string>? parameters = null, int timeout = 0)
     {
         HttpClient client = new HttpClient();
 
@@ -35,7 +35,7 @@ public static class Requests{
         string json = await response.Content.ReadAsStringAsync();
         string data = await response.Content.ReadAsStringAsync();
 
-        return new Response
+        return new FormResponseModel
         {
             StatusCode = (int)response.StatusCode,
             IsSuccess = response.IsSuccessStatusCode,
@@ -44,7 +44,7 @@ public static class Requests{
     }
 
     //Post Operation
-    public static async Task<Response> PostAsync<T>(string url,T payload, Dictionary<string, string>? headers = null)
+    public static async Task<FormResponseModel> PostAsync<T>(string url,T payload, Dictionary<string, string>? headers = null)
     {
         using HttpClient client = new();
 
@@ -60,7 +60,7 @@ public static class Requests{
 
         string data = await response.Content.ReadAsStringAsync();
 
-        return new Response
+        return new FormResponseModel
         {
             StatusCode = (int)response.StatusCode,
             IsSuccess = response.IsSuccessStatusCode,
