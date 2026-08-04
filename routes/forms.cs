@@ -32,8 +32,9 @@ public static class FormOperations
         {
             return await FormCreation.CreateForm(eventList, db);
         });
-        app.MapGet("/fetch-response/{formId}", async (string formId) =>
+        app.MapGet("/fetch-response/{formId}", async (string formId,AppDbContext db) =>
         {
+            await Database.InsertResponse(formId,db);
             return await FormResponse.FetchResponse(formId);            
         });
     }

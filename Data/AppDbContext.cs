@@ -11,4 +11,6 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Form> Forms => Set<Form>();
+    public DbSet<Field> Fields => Set<Field>();
+    public DbSet<Response> Responses => Set<Response>();
 }
