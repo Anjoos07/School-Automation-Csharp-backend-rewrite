@@ -5,8 +5,10 @@ using DbModelForms;
 using Forms;
 using Request;
 using Utilities;
-using Microsoft.VisualBasic;
+using FormHost;
 using Superpower.Model;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace Data;
 
@@ -72,7 +74,69 @@ public class Database
         }  
         return 0;
     }
-    public static async Task<int> InsertResponse(string formId, AppDbContext db)
+
+    public static async Task<IResult> getFields(string formId, AppDbContext db)
+    {
+    var fields = await db.Fields
+        .Where(f => f.FormId == formId)
+        .Select(f => new FieldResponse
+        {
+            FieldId = f.FieldId,
+            FieldName = f.FieldName,
+            FieldType = f.FieldType,
+            GroupingPriority = f.GroupingPriority
+        })
+        .ToListAsync();
+        if (fields is null)
+        {
+            return Results.NotFound();
+        }
+        return Results.Ok(fields);
+    }
+
+    public static async Task<IResult> SetGroupingPriority(string formId, List<string> priority, AppDbContext db)
+    {
+
+        int len = priority.Count();
+
+        var fields = await db.Fields
+        .Where(f => f.FormId == formId)
+        .ToListAsync();
+
+        foreach (var field in fields)
+        {
+            field.GroupingPriority = null;
+        }
+
+        foreach (string fieldId in priority)
+        {
+            Field? currentField = fields.FirstOrDefault(f => f.FieldId == fieldId);   
+            if (currentField is null)
+            {
+                return Results.NotFound();
+            }
+            
+            currentField.GroupingPriority = len;
+            len--;
+        }
+        await db.SaveChangesAsync();
+        return Results.Ok(new
+        {
+            FormId = formId,
+            Grouping = fields
+                .Where(f => f.GroupingPriority != null)
+                .OrderByDescending(f => f.GroupingPriority)
+                .Select(f => new
+                {
+                    f.FieldId,
+                    f.FieldName,
+                    f.GroupingPriority
+                })
+        });
+    }
+
+
+    public static async Task<int> InsertSubmission(string formId, AppDbContext db)
     {
 
         FormResponseModel response = await FormResponse.FetchResponse(formId);
@@ -95,7 +159,7 @@ public class Database
         return 0;
     }
 
-    public static async Task<IResult> GetResponseDb(string formId, AppDbContext db)
+    public static async Task<IResult> GetSubmissionsDb(string formId, AppDbContext db)
     {
         var response = await db.Responses
         .Where(x => x.FormId == formId)
@@ -103,9 +167,46 @@ public class Database
 
         return Results.Ok(response);
     }
+
+        public static async Task<IResult> GetSubmissionsDb(string formId, string submissionId, AppDbContext db)
+    {
+        var response = await db.Responses
+        .Where(x => x.FormId == formId &&
+                    x.SubmissionId == submissionId
+        )
+        .ToListAsync();
+
+        return Results.Ok(response);
+    }
+
+    public static async Task<IResult> ModifySubmissionDb(
+        string formId,
+        string submissionId,
+        JsonElement responseData,
+        AppDbContext db)
+        
+    {
+        var response = await db.Responses
+            .FirstOrDefaultAsync(r =>
+                r.FormId == formId &&
+                r.SubmissionId == submissionId);
+
+        if (response is null)
+            {
+                return Results.NotFound();
+            }
+        Console.WriteLine(response.ResponseData.GetRawText());
+        JsonNode existing = JsonNode.Parse(response.ResponseData.GetRawText())!;
+        JsonNode incoming = JsonNode.Parse(responseData.GetRawText())!;   
+        foreach (var property in incoming.AsObject())
+        {
+            existing[property.Key] = property.Value?.DeepClone();
+        } 
+        response.ResponseData = JsonSerializer.SerializeToElement(existing);
+        await db.SaveChangesAsync();
+        return Results.Ok(response);
+    }
+
+
 }
 
-public class Function
-{
-    
-}

@@ -110,12 +110,11 @@ public static class FormResponse{
                         ["submittedAt"] = respondentData["submittedAt"]?.DeepClone()
                         };
 
-                        JsonArray responses = new JsonArray();
+                        var responses = new JsonObject();
 
                         foreach (JsonNode? questionNode in respondentData["responses"]!.AsArray())
                         {
                         JsonObject question = questionNode!.AsObject();
-                        JsonObject response = new JsonObject();
 
                         foreach (JsonNode? questionDataNode in allQuestions)
                         {
@@ -124,13 +123,10 @@ public static class FormResponse{
                                 if (questionData["id"]!.GetValue<string>() ==
                                 question["questionId"]!.GetValue<string>())
                                 {
-                                response["title"] = questionData["title"]?.DeepClone();
+                                responses[questionData["title"]!.ToString()] = question["answer"]?.DeepClone();
                                 break;
                                 }
                         }
-
-                        response["answer"] = question["answer"]?.DeepClone();
-                        responses.Add(response);
                         }
 
                         respondent["responses"] = responses;

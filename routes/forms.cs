@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Utilities;
 using Request;
 using Data;
+using System.Text.Json;
 
 
 namespace Forms;
@@ -32,10 +33,26 @@ public static class FormOperations
         {
             return await FormCreation.CreateForm(eventList, db);
         });
-        app.MapGet("/fetch-response/{formId}", async (string formId,AppDbContext db) =>
+        app.MapGet("/form/{formId}/fields", async (string formId, AppDbContext db) =>
         {
-            await Database.InsertResponse(formId, db);
-            return await Database.GetResponseDb(formId, db);            
+           return await Database.getFields(formId, db); 
+        });
+        app.MapPut("/form/{formId}/fields/grouping", async (string formId, List<string> priority, AppDbContext db) =>
+        {
+           return await Database.SetGroupingPriority(formId, priority, db); 
+        });
+        app.MapGet("/form/{formId}/submissions", async (string formId,AppDbContext db) =>
+        {
+            // await Database.InsertSubmission(formId, db);
+            return await Database.GetSubmissionsDb(formId, db);            
+        });
+        app.MapGet("/form/{formId}/submissions/{submissionId}", async (string formId, string submissionID, AppDbContext db) =>
+        {
+            return await Database.GetSubmissionsDb(formId, submissionID, db);  
+        });
+        app.MapPatch("/form/{formid}/submission/{submissionId}", async (string formId, string submissionId, JsonElement responseData, AppDbContext db) =>
+        {
+           return await Database.ModifySubmissionDb(formId, submissionId, responseData, db);
         });
     }
     

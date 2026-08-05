@@ -34,6 +34,8 @@ public class Field
     public string FieldName { get; set; } = null!;
     [Column("field_type")]
     public string FieldType { get; set; } = null!;
+    [Column("grouping_priority")]
+    public int? GroupingPriority {get; set;}
 }
 
 [Table("response", Schema = "responses")]
