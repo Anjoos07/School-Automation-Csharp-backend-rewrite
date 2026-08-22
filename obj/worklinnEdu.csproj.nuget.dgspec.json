@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[10.0.1, )"
             },
+            "Google.OrTools": {
+              "target": "Package",
+              "version": "[9.15.6755, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.10, )"
